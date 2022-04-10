@@ -16,6 +16,7 @@ import {
 import Voice from '@react-native-voice/voice';
 
 const STTExample = () => {
+  
 const [pitch, setPitch] = useState('');
   const [error, setError] = useState('');
   const [end, setEnd] = useState('');
