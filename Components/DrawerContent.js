@@ -1,13 +1,8 @@
 import React, {useState, useEffect, useContext} from 'react';
-import {
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, Image,Text} from 'react-native';
 import Dialog from 'react-native-dialog';
 import {Context} from './Context/Context';
-import {ShoppingCart,Categories} from './Icons';
+import {ShoppingCart, Categories} from './Icons';
 import {DrawerContentScrollView} from '@react-navigation/drawer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {svg} from './Images/icon.svg';
@@ -199,11 +194,13 @@ export function DrawerContent (props) {
           >
             {LinksArray.map ((item, index) => {
               return (
-                <DrawerListList
-                  key={index}
-                  item={item}
-                  HandleToggle={HandleToggle}
-                />
+                <Text>
+                  <DrawerListList
+                    key={index}
+                    item={item}
+                    HandleToggle={HandleToggle}
+                  />
+                </Text>
               );
             })}
           </View>

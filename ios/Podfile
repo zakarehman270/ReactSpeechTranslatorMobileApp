@@ -24,6 +24,8 @@ target 'SpeechTranslator' do
 
   pod 'RNFileViewer', :path => '../node_modules/react-native-file-viewer'
 
+  pod 'RNVoiceRecorder', :path => '../node_modules/react-native-voice-recorder'
+
   target 'SpeechTranslatorTests' do
     inherit! :complete
     # Pods for testing
