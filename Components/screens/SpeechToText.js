@@ -47,6 +47,7 @@ const SpeechToText = ({route, navigation}) => {
   const [DisplaySpinner, setDisplaySpinner] = useState (false);
   const [LanguageFrom, setLanguageFrom] = useState ('en');
   const [LanguageTo, setLanguageTo] = useState ('hi');
+  const [partialResults, setPartialResults] = useState([]);
   const contextData = useContext (Context);
   contextData.HandleIsDark ();
 
@@ -243,10 +244,10 @@ const SpeechToText = ({route, navigation}) => {
         console.error (error);
       });
   }
+
   return (
     <View style={{flex: 1}}>
       <Header name={HeaderName} ScreenName={false} EditButton={false} />
-
       <View
         style={[
           styles.Outercontainer,

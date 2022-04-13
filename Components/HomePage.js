@@ -10,7 +10,7 @@ export default function HomPage () {
   
   return (
     <SafeAreaView style={{flex: 1}}>
-      <STTExample />
+      {/* <STTExample /> */}
       <MainScreen/>
     </SafeAreaView>
   );
