@@ -140,6 +140,7 @@ export default function HomPage () {
             </TouchableOpacity>
           </View>
         </View>
+
         <View
           style={{
             width: '100%',
@@ -156,6 +157,7 @@ export default function HomPage () {
             source={GifImageHomeScreen}
           />
         </View>
+        
       </ScrollView>
     </SafeAreaView>
   );

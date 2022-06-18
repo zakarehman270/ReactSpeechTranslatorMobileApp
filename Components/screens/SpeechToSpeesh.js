@@ -14,7 +14,7 @@ import Header from '../Header';
 const img = require ('../Images/Arrow.png');
 const Mic = require ('../Images/Mic.png');
 const Play = require ('../Images/Play.png');
-const GifImageHomeScreen = require ('../Images/wellcome.jpg');
+const GifImageHomeScreen = require ('../Images/StSImage.jpg');
 const Recorder = require ('../Images/Recorder.gif');
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 const icon1 = (
@@ -244,7 +244,7 @@ const SpeechToSpeech = ({route, navigation}) => {
                     </View>
                   </TouchableOpacity>
                 </View>
-                {DisplayDropDownTo &&
+                {DisplayDropDownTo && 
                   <View
                     style={[
                       styles.OuterWrapperAnimatedDropDownList,
@@ -416,17 +416,18 @@ const SpeechToSpeech = ({route, navigation}) => {
       {DisplaySpinner && <Loader />}
       <View
         style={{
-          width: '100%',
-          // paddingTop: 190,
+          paddingTop: 20,
           backgroundColor: contextData.IsDark ? '#252526' : 'white',
+          flex: 1,
+          overflow: 'hidden',
+          alignItems: 'center',
+          position: 'relative',
+          zIndex:-1,
         }}
       >
         <Image
           style={{
-            width: '100%',
-            height: "100%",
             flex: 1,
-            
           }}
           source={GifImageHomeScreen}
         />

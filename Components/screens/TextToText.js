@@ -132,7 +132,7 @@ const TextToText = ({route, navigation}) => {
                     <Image
                       style={{
                         width: '100%',
-                        height: 65,
+                        height: 50,
                         borderColor: '#F4CA16',
                         // flex: 1,
                         resizeMode: 'contain',
@@ -428,6 +428,8 @@ const TextToText = ({route, navigation}) => {
               width: '100%',
               paddingTop: 23,
               backgroundColor: contextData.IsDark ? '#252526' : 'white',
+              position:"relative",
+              zIndex:-1
             }}
           >
             <Image

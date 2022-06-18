@@ -102,10 +102,10 @@ export default (styles = StyleSheet.create ({
     borderBottomLeftRadius:8,
     position:"absolute",
     top:50,
-    zIndex:8,
+    zIndex:999,
     backgroundColor:"white",
     width:"100%",
-    elevation: 8,
+    elevation: 999,
 
   },
 

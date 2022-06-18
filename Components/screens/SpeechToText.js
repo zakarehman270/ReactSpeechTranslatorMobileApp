@@ -1,5 +1,5 @@
 import React, {useState, useContext, useEffect} from 'react';
-import {View, Text, Image, TouchableOpacity} from 'react-native';
+import {View, Text, Image, TouchableOpacity,ScrollView} from 'react-native';
 import {Context} from '../Context/Context';
 import Header from '../Header';
 import Dialog, {DialogContent} from 'react-native-popup-dialog';
@@ -10,6 +10,8 @@ const img = require ('../Images/Arrow.png');
 const Mic = require ('../Images/Mic.png');
 const Recorder = require ('../Images/Recorder.gif');
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+
+const GifImageHomeScreen = require ('../Images/wellcome.jpg');
 const icon1 = (
   <FontAwesome5 style={{fontSize: 21}} name={'chevron-down'} solid />
 );
@@ -97,314 +99,352 @@ const SpeechToText = ({route, navigation}) => {
   return (
     <View style={{flex: 1}}>
       <Header name={HeaderName} ScreenName={false} EditButton={false} />
-      <View
-        style={[
-          styles.Outercontainer,
-          {
-            backgroundColor: contextData.IsDark ? 'black' : '#eaeaea',
-          },
-        ]}
-      >
+      <ScrollView>
         <View
           style={[
-            styles.OutercontainerHomeContentDropDownSpeechToText,
-            {backgroundColor: contextData.IsDark ? '#252526' : 'white'},
+            styles.Outercontainer,
+            {
+              backgroundColor: contextData.IsDark ? 'black' : '#eaeaea',
+              paddingBottom: 12,
+            },
           ]}
-        >
-          <TouchableOpacity
-            onPress={() => {
-              setvisible (true);
-              startRecognizing ();
-            }}
-          >
-            <View style={[styles.OutercontainerBoxes, {marginTop: 0}]}>
-
-              <View style={{width: '100%'}}>
-                <Image
-                  style={{
-                    width: '100%',
-                    height: 60,
-                    borderColor: '#F4CA16',
-                    // flex: 1,
-                    resizeMode: 'contain',
-                  }}
-                  source={Mic}
-                />
-              </View>
-            </View>
-          </TouchableOpacity>
-        </View>
-        <View
-          style={[
-            styles.OutercontainerHomeContentDropDownSpeechToText,
-            {backgroundColor: contextData.IsDark ? '#252526' : 'white'},
-          ]}
-        >
-          <View style={styles.OutercontainerDropDown}>
-            <View style={styles.DropDown}>
-              <View style={styles.DropDown}>
-                <View
-                  style={[
-                    styles.AnimatedDropDown,
-                    {borderColor: contextData.IsDark ? 'white' : 'black'},
-                  ]}
-                >
-                  <TouchableOpacity
-                    onPress={() => {
-                      setToggleArrow (!ToggleArrow);
-                      setDisplayDropDown (!DisplayDropDown);
-                    }}
-                  >
-                    <View
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        padding: 12,
-                      }}
-                    >
-                      <Text
-                        style={{color: contextData.IsDark ? 'white' : 'black'}}
-                      >
-                        {SelectedValue}
-                      </Text>
-                      <Text style={styles.Icon}>{icon1}</Text>
-                    </View>
-                  </TouchableOpacity>
-                </View>
-                {DisplayDropDown &&
-                  <View
-                    style={[
-                      styles.OuterWrapperAnimatedDropDownList,
-                      {backgroundColor: contextData.IsDark ? 'black' : 'white'},
-                    ]}
-                  >
-                    {langs.map ((item, index) => {
-                      let selected = false;
-                      if (index === SelectedIndex) {
-                        selected = true;
-                      }
-                      return (
-                        <View style={{zIndex: 2}} key={index}>
-                          <TouchableOpacity
-                            onPress={() => {
-                              setSelectedValue (item.label);
-                              setSelectedIndex (index);
-                              setDisplayDropDown (false);
-                              setLanguageFrom (item.value);
-                            }}
-                          >
-                            <View style={styles.AnimatedDropDownList}>
-                              <Text
-                                style={{
-                                  color: contextData.IsDark ? 'white' : 'black',
-                                }}
-                              >
-                                {item.label}
-                              </Text>
-                              {selected &&
-                                <Text style={styles.Icon}>{CheckMArk}</Text>}
-                            </View>
-                          </TouchableOpacity>
-                        </View>
-                      );
-                    })}
-                  </View>}
-              </View>
-            </View>
-            <View style={{width: 30}}>
-              <Image
-                style={{
-                  width: '100%',
-                  height: 50,
-                  // flex: 1,
-                  resizeMode: 'contain',
-                }}
-                source={img}
-              />
-            </View>
-
-            <View style={styles.DropDown}>
-              <View style={styles.DropDown}>
-                <View
-                  style={[
-                    styles.AnimatedDropDown,
-                    {borderColor: contextData.IsDark ? 'white' : 'black'},
-                  ]}
-                >
-                  <TouchableOpacity
-                    onPress={() => {
-                      setToggleArrowTo (!ToggleArrowTo);
-                      setDisplayDropDownTo (!DisplayDropDownTo);
-                    }}
-                  >
-                    <View
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        padding: 12,
-                      }}
-                    >
-                      <Text
-                        style={{color: contextData.IsDark ? 'white' : 'black'}}
-                      >
-                        {SelectedValueTo}
-                      </Text>
-                      <Text style={styles.Icon}>{icon1}</Text>
-                    </View>
-                  </TouchableOpacity>
-                </View>
-                {DisplayDropDownTo &&
-                  <View
-                    style={[
-                      styles.OuterWrapperAnimatedDropDownList,
-                      {backgroundColor: contextData.IsDark ? 'black' : 'white'},
-                    ]}
-                  >
-                    {langs.map ((item, index) => {
-                      let selected = false;
-                      if (index === SelectedIndexTo) {
-                        selected = true;
-                      }
-                      return (
-                        <View style={{zIndex: 2}} key={index}>
-                          <TouchableOpacity
-                            onPress={() => {
-                              setSelectedValueTo (item.label);
-                              setSelectedIndexTo (index);
-                              setDisplayDropDownTo (false);
-                              setLanguageTo (item.value);
-                            }}
-                          >
-                            <View style={styles.AnimatedDropDownList}>
-                              <Text
-                                style={{
-                                  color: contextData.IsDark ? 'white' : 'black',
-                                }}
-                              >
-                                {item.label}
-                              </Text>
-                              {selected &&
-                                <Text style={styles.Icon}>{CheckMArk}</Text>}
-                            </View>
-                          </TouchableOpacity>
-                        </View>
-                      );
-                    })}
-                  </View>}
-              </View>
-            </View>
-          </View>
-        </View>
-        <View
-          style={[
-            styles.OutercontainerHomeContent,
-            {backgroundColor: contextData.IsDark ? '#252526' : 'white'},
-          ]}
-        >
-          <TouchableOpacity>
-            <View style={styles.OutercontainerBoxesTextToSpeech}>
-              <View style={{width: '100%', height: 65}}>
-                <Text
-                  style={{
-                    color: contextData.IsDark ? 'white' : 'black',
-                  }}
-                >
-                  {results[0]}
-                </Text>
-              </View>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <View style={styles.OutercontainerBoxesTextToSpeech}>
-              <View style={{width: '100%', height: 65}}>
-                <Text
-                  style={{
-                    color: contextData.IsDark ? 'white' : 'black',
-                  }}
-                >
-                  {TranslatedText}
-                </Text>
-              </View>
-            </View>
-          </TouchableOpacity>
-        </View>
-        <TouchableOpacity
-          onPress={() => {
-            HandleTranslatedText ();
-          }}
         >
           <View
             style={[
               styles.OutercontainerHomeContentDropDownSpeechToText,
-              {
-                backgroundColor: contextData.IsDark ? '#252526' : 'white',
-                marginTop: 1,
-              },
+              {backgroundColor: contextData.IsDark ? '#252526' : 'white'},
             ]}
           >
-            <View
-              style={[styles.OuterWrapperButtonImageToText, {paddingTop: 0}]}
+            <TouchableOpacity
+              onPress={() => {
+                setvisible (true);
+                startRecognizing ();
+              }}
             >
-              <Text style={[styles.Button, {marginTop: 0}]}>
-                Convert{' '}
-              </Text>
-            </View>
-          </View>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.container}>
-        <Dialog
-          visible={visible}
-          onTouchOutside={() => {
-            setvisible (false);
-          }}
-        >
-          <DialogContent
-            style={{
-              backgroundColor: contextData.IsDark ? 'black' : '#eaeaea',
-            }}
-          >
-            <View style={{width: 200, marginTop: 15}}>
-              <View style={{width: '100%', paddingTop: 10}}>
-                <TouchableOpacity
-                  onPress={() => {
-                    setvisible (false);
-                  }}
-                >
+              <View style={[styles.OutercontainerBoxes, {marginTop: 0}]}>
+
+                <View style={{width: '100%'}}>
                   <Image
                     style={{
                       width: '100%',
-                      height: 150,
+                      height: 50,
                       borderColor: '#F4CA16',
-                      // flex: 1,
                       resizeMode: 'contain',
                     }}
-                    source={Recorder}
+                    source={Mic}
                   />
-                </TouchableOpacity>
-              </View>
-            </View>
-
-            <TouchableOpacity
-              onPress={() => {
-                setvisible (false);
-                stopRecognizing ();
-              }}
-            >
-              <View
-                style={[styles.OuterWrapperButtonImageToText, {paddingTop: 10}]}
-              >
-                <Text style={[styles.Button, {marginTop: 0, width: '100%'}]}>
-                  Stop
-                </Text>
+                </View>
               </View>
             </TouchableOpacity>
-          </DialogContent>
-        </Dialog>
-      </View>
-      {DisplaySpinner && <Loader />}
+          </View>
+          <View
+            style={[
+              styles.OutercontainerHomeContentDropDownSpeechToText,
+              {backgroundColor: contextData.IsDark ? '#252526' : 'white'},
+            ]}
+          >
+            <View style={styles.OutercontainerDropDown}>
+              <View style={styles.DropDown}>
+                <View style={styles.DropDown}>
+                  <View
+                    style={[
+                      styles.AnimatedDropDown,
+                      {borderColor: contextData.IsDark ? 'white' : 'black'},
+                    ]}
+                  >
+                    <TouchableOpacity
+                      onPress={() => {
+                        setToggleArrow (!ToggleArrow);
+                        setDisplayDropDown (!DisplayDropDown);
+                      }}
+                    >
+                      <View
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
+                          padding: 12,
+                        }}
+                      >
+                        <Text
+                          style={{
+                            color: contextData.IsDark ? 'white' : 'black',
+                          }}
+                        >
+                          {SelectedValue}
+                        </Text>
+                        <Text style={styles.Icon}>{icon1}</Text>
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+                  {DisplayDropDown &&
+                    <View
+                      style={[
+                        styles.OuterWrapperAnimatedDropDownList,
+                        {
+                          backgroundColor: contextData.IsDark
+                            ? 'black'
+                            : 'white',
+                        },
+                      ]}
+                    >
+                      {langs.map ((item, index) => {
+                        let selected = false;
+                        if (index === SelectedIndex) {
+                          selected = true;
+                        }
+                        return (
+                          <View style={{zIndex: 2}} key={index}>
+                            <TouchableOpacity
+                              onPress={() => {
+                                setSelectedValue (item.label);
+                                setSelectedIndex (index);
+                                setDisplayDropDown (false);
+                                setLanguageFrom (item.value);
+                              }}
+                            >
+                              <View style={styles.AnimatedDropDownList}>
+                                <Text
+                                  style={{
+                                    color: contextData.IsDark
+                                      ? 'white'
+                                      : 'black',
+                                  }}
+                                >
+                                  {item.label}
+                                </Text>
+                                {selected &&
+                                  <Text style={styles.Icon}>{CheckMArk}</Text>}
+                              </View>
+                            </TouchableOpacity>
+                          </View>
+                        );
+                      })}
+                    </View>}
+                </View>
+              </View>
+              <View style={{width: 30}}>
+                <Image
+                  style={{
+                    width: '100%',
+                    height: 50,
+                    // flex: 1,
+                    resizeMode: 'contain',
+                  }}
+                  source={img}
+                />
+              </View>
+
+              <View style={styles.DropDown}>
+                <View style={styles.DropDown}>
+                  <View
+                    style={[
+                      styles.AnimatedDropDown,
+                      {borderColor: contextData.IsDark ? 'white' : 'black'},
+                    ]}
+                  >
+                    <TouchableOpacity
+                      onPress={() => {
+                        setToggleArrowTo (!ToggleArrowTo);
+                        setDisplayDropDownTo (!DisplayDropDownTo);
+                      }}
+                    >
+                      <View
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
+                          padding: 12,
+                        }}
+                      >
+                        <Text
+                          style={{
+                            color: contextData.IsDark ? 'white' : 'black',
+                          }}
+                        >
+                          {SelectedValueTo}
+                        </Text>
+                        <Text style={styles.Icon}>{icon1}</Text>
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+                  {DisplayDropDownTo &&
+                    <View
+                      style={[
+                        styles.OuterWrapperAnimatedDropDownList,
+                        {
+                          backgroundColor: contextData.IsDark
+                            ? 'black'
+                            : 'white',
+                        },
+                      ]}
+                    >
+                      {langs.map ((item, index) => {
+                        let selected = false;
+                        if (index === SelectedIndexTo) {
+                          selected = true;
+                        }
+                        return (
+                          <View style={{zIndex: 2}} key={index}>
+                            <TouchableOpacity
+                              onPress={() => {
+                                setSelectedValueTo (item.label);
+                                setSelectedIndexTo (index);
+                                setDisplayDropDownTo (false);
+                                setLanguageTo (item.value);
+                              }}
+                            >
+                              <View style={styles.AnimatedDropDownList}>
+                                <Text
+                                  style={{
+                                    color: contextData.IsDark
+                                      ? 'white'
+                                      : 'black',
+                                  }}
+                                >
+                                  {item.label}
+                                </Text>
+                                {selected &&
+                                  <Text style={styles.Icon}>{CheckMArk}</Text>}
+                              </View>
+                            </TouchableOpacity>
+                          </View>
+                        );
+                      })}
+                    </View>}
+                </View>
+              </View>
+            </View>
+          </View>
+          <View
+            style={[
+              styles.OutercontainerHomeContent,
+              {backgroundColor: contextData.IsDark ? '#252526' : 'white'},
+            ]}
+          >
+            <TouchableOpacity>
+              <View style={styles.OutercontainerBoxesTextToSpeech}>
+                <View style={{width: '100%', height: 65}}>
+                  <Text
+                    style={{
+                      color: contextData.IsDark ? 'white' : 'black',
+                    }}
+                  >
+                    {results[0]}
+                  </Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <View style={styles.OutercontainerBoxesTextToSpeech}>
+                <View style={{width: '100%', height: 65}}>
+                  <Text
+                    style={{
+                      color: contextData.IsDark ? 'white' : 'black',
+                    }}
+                  >
+                    {TranslatedText}
+                  </Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity
+            onPress={() => {
+              HandleTranslatedText ();
+            }}
+          >
+            <View
+              style={[
+                styles.OutercontainerHomeContentDropDownSpeechToText,
+                {
+                  backgroundColor: contextData.IsDark ? '#252526' : 'white',
+                  marginTop: 1,
+                },
+              ]}
+            >
+              <View
+                style={[styles.OuterWrapperButtonImageToText, {paddingTop: 0}]}
+              >
+                <Text style={[styles.Button, {marginTop: 0}]}>
+                  Convert{' '}
+                </Text>
+              </View>
+            </View>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.container}>
+          <Dialog
+            visible={visible}
+            onTouchOutside={() => {
+              setvisible (false);
+            }}
+          >
+            <DialogContent
+              style={{
+                backgroundColor: contextData.IsDark ? 'black' : '#eaeaea',
+              }}
+            >
+              <View style={{width: 200, marginTop: 15}}>
+                <View style={{width: '100%', paddingTop: 10}}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setvisible (false);
+                    }}
+                  >
+                    <Image
+                      style={{
+                        width: '100%',
+                        height: 150,
+                        borderColor: '#F4CA16',
+                        // flex: 1,
+                        resizeMode: 'contain',
+                      }}
+                      source={Recorder}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <TouchableOpacity
+                onPress={() => {
+                  setvisible (false);
+                  stopRecognizing ();
+                }}
+              >
+                <View
+                  style={[
+                    styles.OuterWrapperButtonImageToText,
+                    {paddingTop: 10},
+                  ]}
+                >
+                  <Text style={[styles.Button, {marginTop: 0, width: '100%'}]}>
+                    Stop
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </DialogContent>
+          </Dialog>
+        </View>
+
+        <View
+          style={{
+            width: '100%',
+            paddingTop: 12,
+            backgroundColor: contextData.IsDark ? '#252526' : 'white',
+            position: 'relative',
+            zIndex: -1,
+          }}
+        >
+          <Image
+            style={{
+              width: '100%',
+              height: 90,
+            }}
+            source={GifImageHomeScreen}
+          />
+        </View>
+        {DisplaySpinner && <Loader />}
+      </ScrollView>
     </View>
   );
 };
