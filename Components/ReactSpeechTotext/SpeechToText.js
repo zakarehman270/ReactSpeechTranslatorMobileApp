@@ -1,7 +1,5 @@
-// import React in our code
-import React, {useState, useEffect} from 'react';
 
-// import all the components we are going to use
+import React, {useState, useEffect} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -11,10 +9,7 @@ import {
   TouchableHighlight,
   ScrollView,
 } from 'react-native';
-
-// import Voice
 import Voice from '@react-native-voice/voice';
-
 const STTExample = () => {
   
 const [pitch, setPitch] = useState('');
@@ -40,38 +35,26 @@ const [pitch, setPitch] = useState('');
   }, []);
 
   const onSpeechStart = (e) => {
-    //Invoked when .start() is called without error
-    console.log('onSpeechStart: ', e);
     setStarted('√');
   }
 
   const onSpeechEnd = (e) => {
-    //Invoked when SpeechRecognizer stops recognition
-    console.log('onSpeechEnd: ', e);
     setEnd('√');
   };
 
   const onSpeechError = (e) => {
-    //Invoked when an error occurs.
-    console.log('onSpeechError: ', e);
     setError(JSON.stringify(e.error));
   };
 
   const onSpeechResults = (e) => {
-    //Invoked when SpeechRecognizer is finished recognizing
-    console.log('onSpeechResults: ', e);
     setResults(e.value);
   };
 
   const onSpeechPartialResults = (e) => {
-    //Invoked when any results are computed
-    console.log('onSpeechPartialResults: ', e);
     setPartialResults(e.value);
   };
 
   const onSpeechVolumeChanged = (e) => {
-    //Invoked when pitch that is recognized changed
-    console.log('onSpeechVolumeChanged: ', e);
     setPitch(e.value);
   };
 
@@ -167,15 +150,6 @@ const [pitch, setPitch] = useState('');
           Results
         </Text>
         <ScrollView style={{marginBottom: 42}}>
-          {/* {results.map((result, index) => {
-            return (
-              <Text
-                key={`result-${index}`}
-                style={styles.textStyle}>
-                {result}ll
-              </Text>
-            );
-          })} */}
           <Text>{results[0]}</Text>
         </ScrollView>
         <View style={styles.horizontalView}>
@@ -206,10 +180,6 @@ const [pitch, setPitch] = useState('');
   );
 
 }
-
-
-
-
 const styles = StyleSheet.create({
     container: {
       flex: 1,

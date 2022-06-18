@@ -1,4 +1,4 @@
-import React, {useState, useContext, useEffect} from 'react';
+import React, {useState, useContext} from 'react';
 import {Context} from '../Context/Context';
 import axios from 'react-native-axios';
 import Loader from '../Spinner';
@@ -12,15 +12,12 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
-  Animated,
 } from 'react-native';
 import Dialog, {DialogContent} from 'react-native-popup-dialog';
 const GifImageHomeScreen = require ('../Images/wellcome.jpg');
-const Mic = require ('../Images/IconImage.png');
 const File = require ('../Images/file.png');
 const PDF = require ('../Images/PDF.png');
 const Word = require ('../Images/word.png');
-
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 const icon1 = (
   <FontAwesome5 style={{fontSize: 21}} name={'chevron-down'} solid />
@@ -29,12 +26,8 @@ const CheckMArk = <FontAwesome5 style={{fontSize: 15}} name={'check'} solid />;
 import {langs} from '../Example/Language';
 import Header from '../Header';
 const TextToText = ({route, navigation}) => {
-  const [SelectedValue, setSelectedValue] = useState ('From');
-  const [SelectedValueTo, setSelectedValueTo] = useState ('To');
-  const [ballAnimation, setballAnimation] = useState (new Animated.Value (0));
-  const [ballAnimationTo, setballAnimationTo] = useState (
-    new Animated.Value (0)
-  );
+  const [SelectedValue, setSelectedValue] = useState ('English');
+  const [SelectedValueTo, setSelectedValueTo] = useState ('Arabic');
   const [ToggleArrow, setToggleArrow] = useState (false);
   const [DisplayDropDown, setDisplayDropDown] = useState (false);
   const [DisplayDropDownTo, setDisplayDropDownTo] = useState (false);
@@ -53,67 +46,13 @@ const TextToText = ({route, navigation}) => {
   const contextData = useContext (Context);
   contextData.HandleIsDark ();
 
-  const animateBall = () => {
-    if (ToggleArrow) {
-      Animated.timing (ballAnimation, {
-        toValue: 180,
-        duration: 1500,
-        useNativeDriver: true,
-      }).start ();
-    } else {
-      Animated.timing (ballAnimation, {
-        toValue: 0,
-        duration: 1500,
-        useNativeDriver: true,
-      }).start ();
-    }
-  };
-  const animateBallTo = () => {
-    if (ToggleArrowTo) {
-      Animated.timing (ballAnimationTo, {
-        toValue: 180,
-        duration: 1500,
-        useNativeDriver: true,
-      }).start ();
-    } else {
-      Animated.timing (ballAnimationTo, {
-        toValue: 0,
-        duration: 1500,
-        useNativeDriver: true,
-      }).start ();
-    }
-  };
   let {name} = route.params;
   let HeaderName = JSON.stringify (name);
   HeaderName = HeaderName.replace ('"', '').replace ('"', '');
-  const ballInterpolateStyle = ballAnimation.interpolate ({
-    inputRange: [0, 90],
-    outputRange: ['0deg', '90deg'],
-  });
-
-  const ballInterpolateStyleTo = ballAnimationTo.interpolate ({
-    inputRange: [0, 90],
-    outputRange: ['0deg', '90deg'],
-  });
-
-  const ballAnimationFun = {
-    transform: [
-      {
-        rotate: ballInterpolateStyle,
-      },
-    ],
-  };
-
-  const ballAnimationFunTo = {
-    transform: [
-      {
-        rotate: ballInterpolateStyleTo,
-      },
-    ],
-  };
 
   function HandleTranslatedText () {
     setDisplaySpinner (true);
+    console.log("gg==",TextValue,"oo===",LanguageFrom,"====",LanguageTo)
     const options = {
       method: 'POST',
       url: 'https://deep-translate1.p.rapidapi.com/language/translate/v2',
@@ -127,6 +66,7 @@ const TextToText = ({route, navigation}) => {
     axios
       .request (options)
       .then (function (response) {
+        console.log("hrr.....",response.data.data.translations.translatedText)
         setTranslatedText (response.data.data.translations.translatedText);
         setDisplaySpinner (false);
       })
@@ -141,7 +81,6 @@ const TextToText = ({route, navigation}) => {
         type: [DocumentPicker.types.pdf],
       });
       await setPDF_URI (res[0].uri);
-      console.log ('..', res[0].uri);
     } catch (err) {
       if (DocumentPicker.isCancel (err)) {
         alert ('Canceled from single doc picker');
@@ -221,7 +160,6 @@ const TextToText = ({route, navigation}) => {
                     <TouchableOpacity
                       onPress={() => {
                         setToggleArrow (!ToggleArrow);
-                        animateBall ();
                         setDisplayDropDown (!DisplayDropDown);
                       }}
                     >
@@ -240,14 +178,7 @@ const TextToText = ({route, navigation}) => {
                         >
                           {SelectedValue}
                         </Text>
-                        <Animated.View
-                          style={[
-                            styles.boxAnimatedDropDownBox,
-                            ballAnimationFun,
-                          ]}
-                        >
                           <Text style={styles.Icon}>{icon1}</Text>
-                        </Animated.View>
                       </View>
                     </TouchableOpacity>
                   </View>
@@ -311,7 +242,6 @@ const TextToText = ({route, navigation}) => {
                     <TouchableOpacity
                       onPress={() => {
                         setToggleArrowTo (!ToggleArrowTo);
-                        animateBallTo ();
                         setDisplayDropDownTo (!DisplayDropDownTo);
                       }}
                     >
@@ -330,14 +260,7 @@ const TextToText = ({route, navigation}) => {
                         >
                           {SelectedValueTo}
                         </Text>
-                        <Animated.View
-                          style={[
-                            styles.boxAnimatedDropDownBox,
-                            ballAnimationFunTo,
-                          ]}
-                        >
                           <Text style={styles.Icon}>{icon1}</Text>
-                        </Animated.View>
                       </View>
                     </TouchableOpacity>
                   </View>
@@ -406,14 +329,11 @@ const TextToText = ({route, navigation}) => {
                     textDecorationLine: 'none',
                   },
                 ]}
-                // placeholder="Write something you want to translate..."
                 multiline={true}
-                // numberOfLines={4}
                 placeholderTextColor={contextData.IsDark ? 'white' : 'black'}
                 value={TextValue}
                 onChangeText={val => {
                   setTextValue (val);
-                  console.log ('ii', val);
                 }}
               />
               <TextInput
@@ -428,7 +348,6 @@ const TextToText = ({route, navigation}) => {
                 multiline={true}
                 placeholderTextColor={contextData.IsDark ? 'white' : 'black'}
                 value={TranslatedText}
-                // numberOfLines={4}
               />
               <View style={styles.OuterWrapperButton}>
                 <Text

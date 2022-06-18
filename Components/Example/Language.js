@@ -4,7 +4,7 @@ export var langs = [
   {label: 'Afrikaans', value: 'af'},
   {label: 'Albanian', value: 'sq'},
   {label: 'Amharic', value: 'am'},
-  {label: 'Arabic', value: 'ar'},
+  {label: 'Arabic', value: 'ar'}, 
   {label: 'Armenian', value: 'hy'},
   {label: 'Azerbaijani', value: 'az'},
   {label: 'Basque', value: 'eu'},

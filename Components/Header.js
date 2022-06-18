@@ -1,16 +1,13 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState, useContext} from 'react';
 import {
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   Image,
   SafeAreaView,
-  BackHandler,
   Share,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-// import { Context } from '../Context/Context'
 import {Context} from './Context/Context';
 import styles from './Style';
 const img = require ('./Images/setting.png');
@@ -18,10 +15,7 @@ const Menu = require ('./Images/menu.png');
 const Ioupe = require ('./Images/search.png');
 const LeftArrow = require ('./Images/left-arrow.png');
 function Header (props) {
-  const contextData = useContext (Context);
-  const [TextTopSearch, setTextTopSearch] = useState ('');
   const navigation = useNavigation ();
-  const [ToggleCartValue, setToggleCartValue] = useState (false);
   const onShare = async () => {
     try {
       const result = await Share.share ({
@@ -173,21 +167,10 @@ function Header (props) {
                   <TouchableOpacity
                     onPress={() => {
                       onShare ();
-                      console.log ('i');
                     }}
                   >
                     <View style={{ marginRight: 13}}>
                       <View style={{width: 25, height: 25}}>
-                        {/* <Image
-                          style={{
-                            width: '100%',
-                            height: '100%',
-                            flex: 1,
-                            resizeMode: 'contain',
-                          }}
-                          source={Sharing}
-                          tintColor="#F6783B"
-                        /> */}
                       </View>
                     </View>
                   </TouchableOpacity>}

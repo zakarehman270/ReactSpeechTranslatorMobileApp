@@ -1,15 +1,7 @@
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import {StyleSheet, Text, View } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
-
-
-
 export default class Loader extends Component {
-  state = {
-    spinner: false
-  };
-
-
   render() {
     return (
       <View style={styles.container}>

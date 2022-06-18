@@ -152,7 +152,6 @@ export default function HomPage () {
               width: '100%',
               height: 65,
               flex: 1,
-              // resizeMode: 'contain',
             }}
             source={GifImageHomeScreen}
           />

@@ -9,7 +9,6 @@ import {svg} from './Images/icon.svg';
 import {useNavigation} from '@react-navigation/native';
 import DrawerGifImage from './Images/DrawerAnimatedPic.gif';
 export function DrawerListList (props) {
-  const [IsSignInToggle, setIsSignInToggle] = useState (false);
   const [visible, setVisible] = useState (false);
   const navigation = useNavigation ();
   const contextData = useContext (Context);
@@ -103,6 +102,7 @@ export function DrawerContent (props) {
   const [ToggleModal, setToggleModal] = useState (false);
   const toggleSwitch = () => setIsEnabled (previousState => !previousState);
   const contextData = useContext (Context);
+
   const GetData = async () => {
     try {
       const value = await AsyncStorage.getItem ('UpdateScreen');
@@ -194,7 +194,7 @@ export function DrawerContent (props) {
           >
             {LinksArray.map ((item, index) => {
               return (
-                <Text>
+                <Text key={index}>
                   <DrawerListList
                     key={index}
                     item={item}

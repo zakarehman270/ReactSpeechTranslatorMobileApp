@@ -1,16 +1,10 @@
 import React, {useState, useEffect, useContext} from 'react';
 import {Context} from '../Context/Context';
-// import {useNavigation} from '@react-navigation/native';
 import {
   View,
   Text,
-  Button,
-  StyleSheet,
-  ScrollView,
-  TextInput,
-  Image,
   TouchableOpacity,
-  Switch,
+  Switch,  
 } from 'react-native';
 import Header from '../Header';
 import AsyncStorage from '@react-native-async-storage/async-storage';

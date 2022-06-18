@@ -1,114 +1,120 @@
-import React, {useState, useContext} from 'react';
-import {View, Text, Animated, Image, TouchableOpacity} from 'react-native';
+import React, {useState, useContext, useEffect} from 'react';
+import {View, Text, Image, TouchableOpacity, ScrollView} from 'react-native';
+import Dialog, {DialogContent} from 'react-native-popup-dialog';
+import Voice from '@react-native-voice/voice';
+import axios from 'react-native-axios';
 import {Context} from '../Context/Context';
 import RadioForm, {
   RadioButton,
   RadioButtonInput,
   RadioButtonLabel,
 } from 'react-native-simple-radio-button';
+import Loader from '../Spinner';
 import Header from '../Header';
-import Icon from 'react-native-vector-icons/FontAwesome';
 const img = require ('../Images/Arrow.png');
-const Speech_To_Speech = require ('../Images/voice-control.png');
 const Mic = require ('../Images/Mic.png');
 const Play = require ('../Images/Play.png');
-const Filled = require ('../Images/Filled.png');
-const UnFilled = require ('../Images/unfilled.png');
-const image_to_text = require ('../Images/image_to_text-removebg-preview.png');
-const BottomFig = require ('../Images/ButtomFig.gif');
-let music = <Icon family={'FontAwesome'} name={'heart'} color={'#808080'} />;
+const GifImageHomeScreen = require ('../Images/wellcome.jpg');
+const Recorder = require ('../Images/Recorder.gif');
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 const icon1 = (
   <FontAwesome5 style={{fontSize: 21}} name={'chevron-down'} solid />
 );
 const CheckMArk = <FontAwesome5 style={{fontSize: 15}} name={'check'} solid />;
 import {langs} from '../Example/Language';
-
+import Tts from 'react-native-tts';
 const SpeechToSpeech = ({route, navigation}) => {
-  const [SelectedValue, setSelectedValue] = useState ('From');
-  const [SelectedValueTo, setSelectedValueTo] = useState ('To');
-  const [ballAnimation, setballAnimation] = useState (new Animated.Value (0));
-  const [ballAnimationTo, setballAnimationTo] = useState (
-    new Animated.Value (0)
-  );
+  const [SelectedValue, setSelectedValue] = useState ('English');
+  const [SelectedValueTo, setSelectedValueTo] = useState ('English');
   const [ToggleArrow, setToggleArrow] = useState (false);
+  const [visible, setvisible] = useState (false);
+  const [DisplaySpinner, setDisplaySpinner] = useState (false);
   const [DisplayDropDown, setDisplayDropDown] = useState (false);
   const [DisplayDropDownTo, setDisplayDropDownTo] = useState (false);
-  const [TextValue, setTextValue] = useState ('');
   const [ToggleArrowTo, setToggleArrowTo] = useState (false);
   const [SelectedIndex, setSelectedIndex] = useState (0);
   const [SelectedIndexTo, setSelectedIndexTo] = useState (0);
-  const [SelectedHurt, setSelectedHurt] = useState (false);
+  const [end, setEnd] = useState ('');
+  const [results, setResults] = useState (['Recoded Test..']);
+  const [TextValue, setTextValue] = useState ('Please Speak Something..');
+  const [TranslatedResult, setTranslatedResult] = useState (
+    'Please Speak Something..'
+  );
+  const [LanguageFrom, setLanguageFrom] = useState ('en');
   const [RadioButtonSelectedValue, setRadioButtonSelectedValue] = useState (0);
   const contextData = useContext (Context);
   contextData.HandleIsDark ();
-
-  const animateBall = () => {
-    if (ToggleArrow) {
-      Animated.timing (ballAnimation, {
-        toValue: 180,
-        duration: 1500,
-        useNativeDriver: true,
-      }).start ();
-    } else {
-      Animated.timing (ballAnimation, {
-        toValue: 0,
-        duration: 1500,
-        useNativeDriver: true,
-      }).start ();
-    }
-  };
-
-  const animateBallTo = () => {
-    if (ToggleArrowTo) {
-      Animated.timing (ballAnimationTo, {
-        toValue: 180,
-        duration: 1500,
-        useNativeDriver: true,
-      }).start ();
-    } else {
-      Animated.timing (ballAnimationTo, {
-        toValue: 0,
-        duration: 1500,
-        useNativeDriver: true,
-      }).start ();
-    }
-  };
-
   let {name} = route.params;
   let HeaderName = JSON.stringify (name);
   HeaderName = HeaderName.replace ('"', '').replace ('"', '');
-
-  const ballInterpolateStyle = ballAnimation.interpolate ({
-    inputRange: [0, 90],
-    outputRange: ['0deg', '90deg'],
-  });
-
-  const ballInterpolateStyleTo = ballAnimationTo.interpolate ({
-    inputRange: [0, 90],
-    outputRange: ['0deg', '90deg'],
-  });
-
-  const ballAnimationFun = {
-    transform: [
-      {
-        rotate: ballInterpolateStyle,
-      },
-    ],
-  };
-
-  const ballAnimationFunTo = {
-    transform: [
-      {
-        rotate: ballInterpolateStyleTo,
-      },
-    ],
-  };
-
   var radio_props = [
     {label: 'Feminine', value: 0},
     {label: 'Masculine', value: 1},
   ];
+
+  useEffect (() => {
+    Voice.onSpeechResults = onSpeechResults;
+    return () => {
+      Voice.destroy ().then (Voice.removeAllListeners);
+    };
+  }, []);
+
+  const onSpeechResults = e => {
+    setResults (e.value);
+    setTranslatedResult (e.value[0]);
+  };
+
+  const startRecognizing = async () => {
+    try {
+      await Voice.start ('en-US');
+      setResults ([]);
+      setEnd ('');
+    } catch (e) {
+      console.error (e);
+    }
+  };
+
+  const stopRecognizing = async () => {
+    try {
+      await Voice.stop ();
+    } catch (e) {
+      console.error (e);
+    }
+    setvisible (false);
+  };
+
+  function HandleTranslatedText (LanguageCode) {
+    setDisplaySpinner (true);
+    Tts.setDefaultLanguage (LanguageCode);
+    console.log (
+      'hyyy',
+      TextValue,
+      '---===',
+      LanguageFrom,
+      'ppp==--',
+      LanguageCode
+    );
+    const options = {
+      method: 'POST',
+      url: 'https://deep-translate1.p.rapidapi.com/language/translate/v2',
+      headers: {
+        'content-type': 'application/json',
+        'x-rapidapi-host': 'deep-translate1.p.rapidapi.com',
+        'x-rapidapi-key': '9eafae7c55msha08ac80fd699164p1a4bfdjsn6d9a42ad752f',
+      },
+      data: {q: TextValue, source: LanguageFrom, target: LanguageCode},
+    };
+    axios
+      .request (options)
+      .then (function (response) {
+        console.log ('hrr', response.data.data.translations.translatedText);
+        setTranslatedResult (response.data.data.translations.translatedText);
+        setDisplaySpinner (false);
+      })
+      .catch (function (error) {
+        console.error (error);
+      });
+  }
 
   return (
     <View style={{flex: 1}}>
@@ -137,7 +143,6 @@ const SpeechToSpeech = ({route, navigation}) => {
                   <TouchableOpacity
                     onPress={() => {
                       setToggleArrow (!ToggleArrow);
-                      animateBall ();
                       setDisplayDropDown (!DisplayDropDown);
                     }}
                   >
@@ -154,14 +159,7 @@ const SpeechToSpeech = ({route, navigation}) => {
                       >
                         {SelectedValue}
                       </Text>
-                      <Animated.View
-                        style={[
-                          styles.boxAnimatedDropDownBox,
-                          ballAnimationFun,
-                        ]}
-                      >
-                        <Text style={styles.Icon}>{icon1}</Text>
-                      </Animated.View>
+                      <Text style={styles.Icon}>{icon1}</Text>
                     </View>
                   </TouchableOpacity>
                 </View>
@@ -184,6 +182,7 @@ const SpeechToSpeech = ({route, navigation}) => {
                               setSelectedValue (item.label);
                               setSelectedIndex (index);
                               setDisplayDropDown (false);
+                              setLanguageFrom (item.value);
                             }}
                           >
                             <View style={styles.AnimatedDropDownList}>
@@ -209,7 +208,6 @@ const SpeechToSpeech = ({route, navigation}) => {
                 style={{
                   width: '100%',
                   height: 50,
-                  // flex: 1,
                   resizeMode: 'contain',
                 }}
                 source={img}
@@ -226,7 +224,6 @@ const SpeechToSpeech = ({route, navigation}) => {
                   <TouchableOpacity
                     onPress={() => {
                       setToggleArrowTo (!ToggleArrowTo);
-                      animateBallTo ();
                       setDisplayDropDownTo (!DisplayDropDownTo);
                     }}
                   >
@@ -243,14 +240,7 @@ const SpeechToSpeech = ({route, navigation}) => {
                       >
                         {SelectedValueTo}
                       </Text>
-                      <Animated.View
-                        style={[
-                          styles.boxAnimatedDropDownBox,
-                          ballAnimationFunTo,
-                        ]}
-                      >
-                        <Text style={styles.Icon}>{icon1}</Text>
-                      </Animated.View>
+                      <Text style={styles.Icon}>{icon1}</Text>
                     </View>
                   </TouchableOpacity>
                 </View>
@@ -258,7 +248,9 @@ const SpeechToSpeech = ({route, navigation}) => {
                   <View
                     style={[
                       styles.OuterWrapperAnimatedDropDownList,
-                      {backgroundColor: contextData.IsDark ? 'black' : 'white'},
+                      {
+                        backgroundColor: contextData.IsDark ? 'black' : 'white',
+                      },
                     ]}
                   >
                     {langs.map ((item, index) => {
@@ -273,6 +265,7 @@ const SpeechToSpeech = ({route, navigation}) => {
                               setSelectedValueTo (item.label);
                               setSelectedIndexTo (index);
                               setDisplayDropDownTo (false);
+                              HandleTranslatedText (item.value);
                             }}
                           >
                             <View style={styles.AnimatedDropDownList}>
@@ -284,9 +277,13 @@ const SpeechToSpeech = ({route, navigation}) => {
                                 {item.label}
                               </Text>
                               {selected &&
-                                <Text style={styles.Icon}>{CheckMArk}</Text>}
+                                <Text style={styles.Icon}>
+                                  {CheckMArk}
+                                </Text>}
                             </View>
+
                           </TouchableOpacity>
+
                         </View>
                       );
                     })}
@@ -332,7 +329,12 @@ const SpeechToSpeech = ({route, navigation}) => {
             {backgroundColor: contextData.IsDark ? '#252526' : 'white'},
           ]}
         >
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              setvisible (true);
+              startRecognizing ();
+            }}
+          >
             <View style={styles.OutercontainerBoxes}>
               <View style={{width: '100%'}}>
                 <Image
@@ -340,7 +342,6 @@ const SpeechToSpeech = ({route, navigation}) => {
                     width: '100%',
                     height: 65,
                     borderColor: '#F4CA16',
-                    // flex: 1,
                     resizeMode: 'contain',
                   }}
                   source={Mic}
@@ -348,7 +349,11 @@ const SpeechToSpeech = ({route, navigation}) => {
               </View>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              Tts.speak (TranslatedResult);
+            }}
+          >
             <View style={styles.OutercontainerBoxes}>
               <View style={{width: '100%'}}>
                 <Image
@@ -364,50 +369,66 @@ const SpeechToSpeech = ({route, navigation}) => {
             </View>
           </TouchableOpacity>
         </View>
-        <View>
-          {SelectedHurt
-            ? <View style={{width: '100%'}}>
-                <TouchableOpacity onPress={() => setSelectedHurt (false)}>
+      </View>
+      <View style={styles.container}>
+        <Dialog
+          visible={visible}
+          onTouchOutside={() => {
+            setvisible (false);
+          }}
+        >
+          <DialogContent
+            style={{
+              backgroundColor: contextData.IsDark ? 'black' : '#eaeaea',
+            }}
+          >
+            <View style={{width: 200, marginTop: 15}}>
+              <View style={{width: '100%', paddingTop: 10}}>
+                <TouchableOpacity
+                  onPress={() => {
+                    setvisible (false);
+                  }}
+                >
                   <Image
                     style={{
                       width: '100%',
-                      height: 65,
+                      height: 150,
                       borderColor: '#F4CA16',
                       resizeMode: 'contain',
                     }}
-                    source={Filled}
+                    source={Recorder}
                   />
                 </TouchableOpacity>
               </View>
-            : <View style={{width: '100%'}}>
-                <TouchableOpacity onPress={() => setSelectedHurt (true)}>
-                  <Image
-                    style={{
-                      width: '100%',
-                      height: 65,
-                      borderColor: '#F4CA16',
-                      // flex: 1,
-                      resizeMode: 'contain',
-                    }}
-                    source={UnFilled}
-                  />
-                </TouchableOpacity>
-              </View>}
-        </View>
+            </View>
+            <TouchableOpacity onPress={stopRecognizing}>
+              <View
+                style={[styles.OuterWrapperButtonImageToText, {paddingTop: 10}]}
+              >
+                <Text style={[styles.Button, {marginTop: 0, width: '100%'}]}>
+                  Stop
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </DialogContent>
+        </Dialog>
       </View>
+      {DisplaySpinner && <Loader />}
       <View
         style={{
-          paddingTop: 12,
+          width: '100%',
+          // paddingTop: 190,
           backgroundColor: contextData.IsDark ? '#252526' : 'white',
         }}
       >
         <Image
           style={{
             width: '100%',
-            height: 250,
-            resizeMode: 'cover',
+            height: "100%",
+            flex: 1,
+            
           }}
-          source={BottomFig}
+          source={GifImageHomeScreen}
         />
       </View>
     </View>

@@ -94,17 +94,21 @@ export default (styles = StyleSheet.create ({
     marginTop: 8,
 
   },
+
   OuterWrapperAnimatedDropDownList: {
     borderWidth: 1,
     padding: 12,
     borderBottomRightRadius:8,
     borderBottomLeftRadius:8,
-    // position:"absolute",
-    // top:50,
+    position:"absolute",
+    top:50,
+    zIndex:8,
     backgroundColor:"white",
     width:"100%",
-    zIndex:1
+    elevation: 8,
+
   },
+
   DropDownList: {
     borderWidth: 1,
     display: 'flex',
