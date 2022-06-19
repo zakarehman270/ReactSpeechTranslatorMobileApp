@@ -1,15 +1,10 @@
 import React, {useState, useEffect, useContext} from 'react';
 import {Context} from '../Context/Context';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Switch,  
-} from 'react-native';
+import {View, Text, Switch} from 'react-native';
 import Header from '../Header';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const CartScreen = ({route, navigation}) => {
+const Settings = ({route, navigation}) => {
   const [IsDark, setIsDark] = useState (false);
   const [isEnabled, setIsEnabled] = useState (false);
   const contextData = useContext (Context);
@@ -25,13 +20,17 @@ const CartScreen = ({route, navigation}) => {
     contextData.HandleIsDark ();
   };
 
-  useEffect (async () => {
+  async function handleGetISDark () {
     const value = await AsyncStorage.getItem ('IsDark');
     if (value !== null) {
       let data = JSON.parse (value);
       setIsDark (data);
       setIsEnabled (!data);
     }
+  }
+
+  useEffect (() => {
+    handleGetISDark ();
   }, []);
 
   return (
@@ -67,35 +66,9 @@ const CartScreen = ({route, navigation}) => {
             value={isEnabled}
           />
         </View>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate ('Favourite', {
-              name: 'Favourite',
-            });
-          }}
-        >
-          <View
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 18,
-                textAlignVertical: 'center',
-                marginTop: 20,
-                color: IsDark ? 'white' : 'black',
-              }}
-            >
-              Favourite List
-            </Text>
-          </View>
-        </TouchableOpacity>
       </View>
     </View>
   );
 };
 
-export default CartScreen;
+export default Settings;

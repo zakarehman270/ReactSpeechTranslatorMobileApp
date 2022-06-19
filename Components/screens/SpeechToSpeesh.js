@@ -1,16 +1,13 @@
 import React, {useState, useContext, useEffect} from 'react';
-import {View, Text, Image, TouchableOpacity, ScrollView} from 'react-native';
+import {View, Text, Image, TouchableOpacity, Alert} from 'react-native';
 import Dialog, {DialogContent} from 'react-native-popup-dialog';
 import Voice from '@react-native-voice/voice';
 import axios from 'react-native-axios';
 import {Context} from '../Context/Context';
-import RadioForm, {
-  RadioButton,
-  RadioButtonInput,
-  RadioButtonLabel,
-} from 'react-native-simple-radio-button';
 import Loader from '../Spinner';
 import Header from '../Header';
+import {langs} from '../Example/Language';
+import Tts from 'react-native-tts';
 const img = require ('../Images/Arrow.png');
 const Mic = require ('../Images/Mic.png');
 const Play = require ('../Images/Play.png');
@@ -21,8 +18,6 @@ const icon1 = (
   <FontAwesome5 style={{fontSize: 21}} name={'chevron-down'} solid />
 );
 const CheckMArk = <FontAwesome5 style={{fontSize: 15}} name={'check'} solid />;
-import {langs} from '../Example/Language';
-import Tts from 'react-native-tts';
 const SpeechToSpeech = ({route, navigation}) => {
   const [SelectedValue, setSelectedValue] = useState ('English');
   const [SelectedValueTo, setSelectedValueTo] = useState ('English');
@@ -34,23 +29,14 @@ const SpeechToSpeech = ({route, navigation}) => {
   const [ToggleArrowTo, setToggleArrowTo] = useState (false);
   const [SelectedIndex, setSelectedIndex] = useState (0);
   const [SelectedIndexTo, setSelectedIndexTo] = useState (0);
-  const [end, setEnd] = useState ('');
-  const [results, setResults] = useState (['Recoded Test..']);
-  const [TextValue, setTextValue] = useState ('Please Speak Something..');
-  const [TranslatedResult, setTranslatedResult] = useState (
-    'Please Speak Something..'
-  );
+  const [SpeechResult, setSpeechResult] = useState ('Please Speak Something..');
+  const [VoiceRecord, setVoiceRecord] = useState ('Please Speak Something..');
   const [LanguageFrom, setLanguageFrom] = useState ('en');
-  const [RadioButtonSelectedValue, setRadioButtonSelectedValue] = useState (0);
   const contextData = useContext (Context);
   contextData.HandleIsDark ();
   let {name} = route.params;
   let HeaderName = JSON.stringify (name);
   HeaderName = HeaderName.replace ('"', '').replace ('"', '');
-  var radio_props = [
-    {label: 'Feminine', value: 0},
-    {label: 'Masculine', value: 1},
-  ];
 
   useEffect (() => {
     Voice.onSpeechResults = onSpeechResults;
@@ -60,15 +46,13 @@ const SpeechToSpeech = ({route, navigation}) => {
   }, []);
 
   const onSpeechResults = e => {
-    setResults (e.value);
-    setTranslatedResult (e.value[0]);
+    setVoiceRecord (e.value[0]);
+    setSpeechResult (e.value[0]);
   };
 
   const startRecognizing = async () => {
     try {
       await Voice.start ('en-US');
-      setResults ([]);
-      setEnd ('');
     } catch (e) {
       console.error (e);
     }
@@ -82,40 +66,59 @@ const SpeechToSpeech = ({route, navigation}) => {
     }
     setvisible (false);
   };
-
   function HandleTranslatedText (LanguageCode) {
     setDisplaySpinner (true);
     Tts.setDefaultLanguage (LanguageCode);
-    console.log (
-      'hyyy',
-      TextValue,
-      '---===',
-      LanguageFrom,
-      'ppp==--',
-      LanguageCode
-    );
-    const options = {
-      method: 'POST',
-      url: 'https://deep-translate1.p.rapidapi.com/language/translate/v2',
-      headers: {
-        'content-type': 'application/json',
-        'x-rapidapi-host': 'deep-translate1.p.rapidapi.com',
-        'x-rapidapi-key': '9eafae7c55msha08ac80fd699164p1a4bfdjsn6d9a42ad752f',
-      },
-      data: {q: TextValue, source: LanguageFrom, target: LanguageCode},
-    };
-    axios
-      .request (options)
-      .then (function (response) {
-        console.log ('hrr', response.data.data.translations.translatedText);
-        setTranslatedResult (response.data.data.translations.translatedText);
-        setDisplaySpinner (false);
-      })
-      .catch (function (error) {
-        console.error (error);
-      });
-  }
+    const encodedParams = new URLSearchParams ();
+    encodedParams.append ('source_language', LanguageFrom);
+    encodedParams.append ('target_language', LanguageCode);
+    encodedParams.append ('text', VoiceRecord);
+    if (LanguageFrom === LanguageCode) {
+      setSpeechResult (VoiceRecord);
+    } else {
+      const options = {
+        method: 'POST',
+        url: 'https://text-translator2.p.rapidapi.com/translate',
+        headers: {
+          'content-type': 'application/x-www-form-urlencoded',
+          'X-RapidAPI-Key': 'f0c1ebf81bmsh6b2c24be3fd36dap1abd55jsna4cab6cccac1',
+          'X-RapidAPI-Host': 'text-translator2.p.rapidapi.com',
+        },
+        data: encodedParams,
+      };
 
+      axios
+        .request (options)
+        .then (function (response) {
+          setSpeechResult (response.data.data.translatedText);
+          setDisplaySpinner (false);
+        })
+        .catch (function (error) {
+          console.error (error);
+          Alert.alert (
+            'API Service',
+            'Your Api Service has ended. please purchase API and try again',
+            [
+              {
+                text: 'Cancel',
+                onPress: () => console.log ('Cancel Pressed'),
+                style: 'cancel',
+              },
+              {text: 'OK', onPress: () => console.log ('OK Pressed')},
+            ]
+          );
+        });
+    }
+  }
+  useEffect (
+    () => {
+      const timer = setTimeout (() => {
+        setDisplaySpinner (false);
+      }, 5000);
+      return () => clearTimeout (timer);
+    },
+    [DisplaySpinner]
+  );
   return (
     <View style={{flex: 1}}>
       <Header name={HeaderName} ScreenName={false} EditButton={false} />
@@ -244,7 +247,7 @@ const SpeechToSpeech = ({route, navigation}) => {
                     </View>
                   </TouchableOpacity>
                 </View>
-                {DisplayDropDownTo && 
+                {DisplayDropDownTo &&
                   <View
                     style={[
                       styles.OuterWrapperAnimatedDropDownList,
@@ -281,46 +284,13 @@ const SpeechToSpeech = ({route, navigation}) => {
                                   {CheckMArk}
                                 </Text>}
                             </View>
-
                           </TouchableOpacity>
-
                         </View>
                       );
                     })}
                   </View>}
               </View>
             </View>
-          </View>
-          <View style={{marginTop: 32}}>
-            <RadioForm formHorizontal={true} animation={true}>
-              {radio_props.map ((obj, i) => (
-                <RadioButton labelHorizontal={true} key={i}>
-                  <RadioButtonInput
-                    obj={obj}
-                    index={i}
-                    isSelected={RadioButtonSelectedValue === i}
-                    onPress={() => setRadioButtonSelectedValue (i)}
-                    borderWidth={1}
-                    buttonInnerColor={'#FF783E'}
-                    buttonOuterColor={'#FF783E'}
-                    buttonSize={20}
-                    buttonOuterSize={20}
-                    buttonWrapStyle={{marginLeft: 30}}
-                  />
-                  <RadioButtonLabel
-                    obj={obj}
-                    index={i}
-                    labelHorizontal={true}
-                    onPress={() => setRadioButtonSelectedValue (i)}
-                    labelStyle={{
-                      fontSize: 15,
-                      color: contextData.IsDark ? 'white' : 'black',
-                    }}
-                    labelWrapStyle={{marginRight: 30}}
-                  />
-                </RadioButton>
-              ))}
-            </RadioForm>
           </View>
         </View>
         <View
@@ -351,7 +321,7 @@ const SpeechToSpeech = ({route, navigation}) => {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              Tts.speak (TranslatedResult);
+              Tts.speak (SpeechResult);
             }}
           >
             <View style={styles.OutercontainerBoxes}>
@@ -370,7 +340,7 @@ const SpeechToSpeech = ({route, navigation}) => {
           </TouchableOpacity>
         </View>
       </View>
-      <View style={styles.container}>
+      <View>
         <Dialog
           visible={visible}
           onTouchOutside={() => {
@@ -416,13 +386,13 @@ const SpeechToSpeech = ({route, navigation}) => {
       {DisplaySpinner && <Loader />}
       <View
         style={{
-          paddingTop: 20,
+          paddingTop: 12,
           backgroundColor: contextData.IsDark ? '#252526' : 'white',
           flex: 1,
           overflow: 'hidden',
           alignItems: 'center',
           position: 'relative',
-          zIndex:-1,
+          zIndex: -1,
         }}
       >
         <Image

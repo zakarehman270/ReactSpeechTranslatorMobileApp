@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {View} from 'react-native';
 import {SliderBox} from 'react-native-image-slider-box';
 const carasoleImagePic1 = require ('./Images/carasoleImg1.jpg');
 const carasoleImagePic2 = require ('./Images/carasoleImg2.jpg');
@@ -17,7 +17,6 @@ export default class MyCarousel extends Component {
       ],
     };
   }
-
   render () {
     return (
       <View
@@ -27,9 +26,8 @@ export default class MyCarousel extends Component {
           justifyContent: 'center',
           alignItems: 'center',
           width: 335,
-          // borderWidth:1,
           marginTop: 7,
-          height: 140,
+          height: 190,
         }}
       >
         <View style={{}}>

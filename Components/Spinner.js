@@ -14,7 +14,6 @@ export default class Loader extends Component {
     );
   }
 }
-
 const styles = StyleSheet.create({
   spinnerTextStyle: {
     color: '#FFF'

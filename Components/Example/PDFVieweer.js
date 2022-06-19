@@ -50,14 +50,12 @@ const styles = StyleSheet.create ({
     height: Dimensions.get ('window').height,
   },
   OuterWrapperButton: {
-    // borderWidth:1,
     width: '100%',
     paddingLeft: 15,
     paddingRight: 15,
     paddingBottom: 10,
   },
   Button: {
-    // borderWidth:1,
     width: '100%',
     backgroundColor: '#FF783E',
     color: 'white',

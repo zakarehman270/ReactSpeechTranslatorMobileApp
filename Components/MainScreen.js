@@ -1,4 +1,4 @@
-import React, {useState, useContext, useEffect} from 'react';
+import React, {useState, useContext} from 'react';
 import {Context} from './Context/Context';
 import {
   Text,
@@ -140,11 +140,10 @@ export default function HomPage () {
             </TouchableOpacity>
           </View>
         </View>
-
         <View
           style={{
             width: '100%',
-            paddingTop: 26,
+            paddingTop: 12,
             backgroundColor: contextData.IsDark ? '#252526' : 'white',
           }}
         >
@@ -157,7 +156,6 @@ export default function HomPage () {
             source={GifImageHomeScreen}
           />
         </View>
-        
       </ScrollView>
     </SafeAreaView>
   );

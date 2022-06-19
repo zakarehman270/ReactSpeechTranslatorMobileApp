@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import HomPage from './Components/HomePage';
 import {NavigationContainer} from '@react-navigation/native';
 import TextToText from './Components/screens/TextToText';
@@ -6,11 +6,10 @@ import SpeechToSpeech from './Components/screens/SpeechToSpeesh';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {DrawerContent} from './Components/DrawerContent';
 import {createStackNavigator} from '@react-navigation/stack';
-import CartScreen from './Components/screens/CartScreen';
+import Settings from './Components/screens/Settings';
 import SpeechToText from './Components/screens/SpeechToText'
 import ImageToText from './Components/screens/ImageToText'
 import AboutUs from './Components/screens/AboutUs'
-import Favourite from './Components/screens/Favourite'
 const Stack = createStackNavigator ();
 const Drawer = createDrawerNavigator ();
 function Root () {
@@ -24,12 +23,7 @@ function Root () {
        <Stack.Screen
         options={{headerShown: false}}
         name="Settings"
-        component={CartScreen}
-      />
-       <Stack.Screen
-        options={{headerShown: false}}
-        name="Favourite"
-        component={Favourite}
+        component={Settings}
       />
        <Stack.Screen
         options={{headerShown: false}}

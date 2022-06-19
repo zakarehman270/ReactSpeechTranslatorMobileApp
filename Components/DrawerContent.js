@@ -1,13 +1,27 @@
-import React, {useState, useEffect, useContext} from 'react';
-import {View, StyleSheet, TouchableOpacity, Image,Text} from 'react-native';
+import React, {useState, useContext} from 'react';
+import {View, StyleSheet, TouchableOpacity, Image, Text} from 'react-native';
 import Dialog from 'react-native-dialog';
 import {Context} from './Context/Context';
-import {ShoppingCart, Categories} from './Icons';
 import {DrawerContentScrollView} from '@react-navigation/drawer';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {svg} from './Images/icon.svg';
 import {useNavigation} from '@react-navigation/native';
 import DrawerGifImage from './Images/DrawerAnimatedPic.gif';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+{/* <i class="fa-solid fa-house-blank"></i> */}
+export const Home = (
+  <FontAwesome5
+    style={{fontSize: 16, color: '#84959F'}}
+    name='house-user'
+    solid
+  />
+);
+export const about = (
+  <FontAwesome5
+    style={{fontSize: 16, color: '#84959F'}}
+    name='users'
+    solid
+  />
+);
 export function DrawerListList (props) {
   const [visible, setVisible] = useState (false);
   const navigation = useNavigation ();
@@ -39,7 +53,6 @@ export function DrawerListList (props) {
               label="Yes"
               onPress={() => {
                 storeData ();
-                props.HandleToggle ();
               }}
             />
           </View>
@@ -78,7 +91,6 @@ export function DrawerListList (props) {
                 color: 'white',
                 padding: 13,
                 marginLeft: 12,
-                // borderWidth: 1,
                 borderRadius: 22,
                 fontSize: 16,
                 position: 'absolute',
@@ -96,45 +108,10 @@ export function DrawerListList (props) {
   );
 }
 export function DrawerContent (props) {
-  const [IsSignInToggle, setIsSignInToggle] = useState (false);
-  const [isEnabled, setIsEnabled] = useState (false);
-  const [IsSignIn, setIsSignIn] = useState ('Sign In');
-  const [ToggleModal, setToggleModal] = useState (false);
-  const toggleSwitch = () => setIsEnabled (previousState => !previousState);
   const contextData = useContext (Context);
-
-  const GetData = async () => {
-    try {
-      const value = await AsyncStorage.getItem ('UpdateScreen');
-      if (value !== null) {
-        let data = JSON.parse (value);
-        setIsSignInToggle (data);
-        if (data) {
-          setIsSignIn ('Sign Out');
-        } else {
-          setIsSignIn ('Sign In');
-        }
-      }
-    } catch (e) {
-      console.log ('read error', e);
-    }
-  };
-
-  useEffect (() => {
-    GetData ();
-  });
-
-  function HandleToggle () {
-    GetData ();
-  }
-
-  function HandleModal (toggleScreen) {
-    setToggleModal (toggleScreen);
-  }
-
   const LinksArray = [
     {
-      Icon: Categories,
+      Icon: Home,
       Label: 'Home',
       Screen: 'HomPage',
       selected: true,
@@ -142,7 +119,7 @@ export function DrawerContent (props) {
       selectedCartItemNumber: false,
     },
     {
-      Icon: ShoppingCart,
+      Icon: about,
       Label: 'About Us',
       Screen: 'AboutUs',
       selected: true,
@@ -160,7 +137,7 @@ export function DrawerContent (props) {
     >
       <DrawerContentScrollView {...props} contentContainerStyle={{}}>
         <View style={[styles.drawerContent]}>
-          <View style={styles.OuterWraperUserInfo}>
+          <View>
             <View
               style={{
                 height: 250,
@@ -174,8 +151,6 @@ export function DrawerContent (props) {
                 style={{
                   width: '100%',
                   height: '100%',
-                  // flex: 1,
-                  // resizeMode: 'contain',
                   borderRadius: 12,
                 }}
                 source={DrawerGifImage}
@@ -195,11 +170,7 @@ export function DrawerContent (props) {
             {LinksArray.map ((item, index) => {
               return (
                 <Text key={index}>
-                  <DrawerListList
-                    key={index}
-                    item={item}
-                    HandleToggle={HandleToggle}
-                  />
+                  <DrawerListList key={index} item={item} />
                 </Text>
               );
             })}
@@ -221,18 +192,9 @@ const styles = StyleSheet.create ({
   drawerContent: {
     flex: 1,
     padding: 4,
-    // borderWidth: 1,
-  },
-  OuterWraperDrawerLinks: {
-    // borderWidth: 1,
-  },
-  OuterWraperUserInfo: {
-    // borderWidth: 1,
-    // marginVertical:12
   },
   Headingparagraph: {
     color: '#050505',
-    // borderWidth: 1,
     fontSize: 17,
     marginBottom: 12,
   },
@@ -248,12 +210,10 @@ const styles = StyleSheet.create ({
     borderRadius: 8,
   },
   LocationTextHolder: {
-    // borderWidth:1,
     width: 220,
     fontSize: 14,
   },
   LocationFontIcon: {
-    // borderWidth:1,
     textAlignVertical: 'center',
   },
 });

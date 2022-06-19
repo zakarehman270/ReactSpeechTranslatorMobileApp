@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -8,7 +8,6 @@ import {
   Share,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {Context} from './Context/Context';
 import styles from './Style';
 const img = require ('./Images/setting.png');
 const Menu = require ('./Images/menu.png');
@@ -16,26 +15,6 @@ const Ioupe = require ('./Images/search.png');
 const LeftArrow = require ('./Images/left-arrow.png');
 function Header (props) {
   const navigation = useNavigation ();
-  const onShare = async () => {
-    try {
-      const result = await Share.share ({
-        message: 'React Native | A framework for building native apps using React',
-      });
-      if (result.action === Share.sharedAction) {
-        if (result.activityType) {
-          // shared with activity type of result.activityType
-        } else {
-          // shared
-        }
-      } else if (result.action === Share.dismissedAction) {
-        // dismissed
-      }
-    } catch (error) {
-      alert (error.message);
-    }
-  };
-
-
   if (props.name === undefined) {
     return (
       <SafeAreaView>
@@ -43,7 +22,6 @@ function Header (props) {
           <View
             style={{
               marginRight: 19,
-              // marginTop: 10,
               marginLeft: 5,
               elevation: 1,
               
@@ -74,7 +52,6 @@ function Header (props) {
           </View>
           <TouchableOpacity
             underlayColor="none"
-            style={styles.button}
             onPress={() => {
               navigation.navigate ('Settings', {
                 name: 'Settings',
@@ -109,10 +86,8 @@ function Header (props) {
             <View
               style={{
                 marginRight: 10,
-                // marginTop: 11,
                 marginLeft: 7,
                 marginRight: 10,
-                // borderWidth:1
               }}
             >
               <TouchableOpacity
@@ -141,13 +116,11 @@ function Header (props) {
                 flexDirection: 'row',
                 justifyContent: 'space-between',
                 width: 290,
-                // borderWidth:1
               }}
             >
               {props.Searchbarinputfield
                 ? <SafeAreaView>
                     <View
-                      style={styles.HeaderOuterWraperInputinputSearchScreen}
                     >
                       <Text>TranslatorApp</Text>
                     </View>
@@ -165,9 +138,6 @@ function Header (props) {
               <View style={{display: 'flex', flexDirection: 'row'}}>
                 {props.ScreenName &&
                   <TouchableOpacity
-                    onPress={() => {
-                      onShare ();
-                    }}
                   >
                     <View style={{ marginRight: 13}}>
                       <View style={{width: 25, height: 25}}>
@@ -200,7 +170,6 @@ function Header (props) {
                 {props.EditButton &&
                   <TouchableOpacity
                     underlayColor="none"
-                    style={styles.button}
                     onPress={() => dispatch (TOGGLEEDITBUTTON (true))}
                   >
                     <View
@@ -228,7 +197,6 @@ function Header (props) {
                   ? <View>
                       <TouchableOpacity
                         underlayColor="none"
-                        style={styles.button}
                         onPress={() => {
                           navigation.navigate ('Settings', {
                             name: 'Settings',
@@ -254,7 +222,6 @@ function Header (props) {
                   : <View>
                       <TouchableOpacity
                         underlayColor="none"
-                        style={styles.button}
                         onPress={() => {
                           navigation.navigate ('Settings', {
                             name: 'Settings',
