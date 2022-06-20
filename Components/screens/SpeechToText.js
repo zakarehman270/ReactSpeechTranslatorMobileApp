@@ -352,7 +352,7 @@ const SpeechToText = ({route, navigation}) => {
                     color: contextData.IsDark ? 'white' : 'black',
                   }}
                 >
-                  {results[0]}mmmm
+                  {results[0]}
                 </Text>
               </ScrollView>
             </View>
